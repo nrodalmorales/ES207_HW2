@@ -1,0 +1,124 @@
+---
+title: "Es_207_hw2"
+author: "Naivy Rodal"
+date: "30/1/2020"
+output: html_document
+output: pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#######################################################
+# Example R Markdown Script                           #
+# Adapted from:                                       #
+# Tidy data and efficient manipulation              #
+# Coding Club tutorial                              #  
+# January 18th 2017                                 #
+# Sandra Angers-Blondin (s.angers-blondin@ed.ac.uk) #
+# John Godlee                                         #
+# 24/Jan/2017                                         #
+#######################################################
+
+##The first thing to do is instal the packages so I can use the functions
+#install.packages("pander")
+#install.packages("tidyr")
+#install.packages("dplyr")
+
+##Then, you need to name the library to start using them
+```{r}
+library(dplyr) #  data manipulation package
+library(tidyr) # a package to format your data
+library(pander) #to create pretty tables
+```
+```{r, warning = FALSE}
+library(dplyr)
+##Open the file where I download the data set I am going to using 'setwd()'
+##Import the data
+```
+
+```{r}
+elongation <- read.csv("EmpetrumElongation.csv", sep = ";")
+```
+
+```{r, eval=FALSE}
+germination <- read.csv("Germination.csv", sep = ";") #As elongation data does not exist I have to write the funtion nest to '{r}'
+```
+
+# Tidying the data
+#Putting the data into long format using gather()
+```{r, eval=FALSE}
+
+elongation_long <- gather(elongation, Year, Length, c(X2007, X2008, X2009, X2010, X2011, X2012)) 
+head("elongation_long")
+
+```
+```{r, eval=FALSE}
+# Create a boxplot of `elongation_long' to visualise elongation for each year.
+boxplot(Length ~ Year, 
+        data = elongation_long, 
+        xlab = "Year", 
+        ylab = "Elongation (cm)", 
+        main = "Annual growth of Empetrum hermaphroditum")
+```
+
+```{r, eval=FALSE}
+# Filter() to keep only the rows of `germination' for species `SR' 
+germinSR <- filter(germination, Species == 'SR')
+```
+
+```{r, eval=FALSE}
+hist(germinSR$Nb_seeds_germin, breaks = 8)
+##Creating a Histogram
+# Mutate() is used to create a new column 
+germin_percent <- mutate(germination, Percent = Nb_seeds_germin / Nb_seeds_tot * 100)
+germin_summ <- germin_percent %>%
+  group_by(Species) %>%
+  summarise("Mean germination per" = mean(Nb_seeds_germin), "Max germination per" = max(Nb_seeds_germin), "Min germination per" = min(Nb_seeds_germin))
+##Making a table
+library(pander)
+norm<- germin_summ(100, mean=0, sd=1)
+germin_summ <- germin_percent %>%
+  group_by(Species) %>%
+  summarise("Mean germination per" = mean(Nb_seeds_germin), "Max germination per" = max(Nb_seeds_germin), "Min germination per" = min(Nb_seeds_germin))
+
+## I can do this part because I do not have the file
+```
+
+```{r}
+A<- c("a","a","b", "b")
+B<- c(5, 10, 15, 20)
+dataframe<- data.frame(A,B)
+plot(dataframe)
+##For this part I use the data in "Getting started with R Markdown"
+```
+
+
+```{r, include= FALSE}
+library(pander)
+plant<- c("a", "b")
+temperature<- c(20,20)
+growth<- c(0.65, 0.95)
+dataframe<- data.frame(plant, temperature, growth)
+emphasize.italics.cols(2)
+pander(dataframe)
+```
+|Plant| Temp | Growth |
+|:----|:-----|-------:|
+|A    | 20   | 0.65   |
+|B    | 20   | 0.95   |
+
+```{r, echo=FALSE} 
+library(broom)
+A<- c(20, 15, 10)
+B<- c(1,2,3)
+lm_test <- lm(A~B)
+summary(lm_test)
+table_obj<- tidy(lm_test)
+pander(table_obj,digits=3)
+```
+
+
+
+
