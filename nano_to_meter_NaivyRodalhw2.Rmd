@@ -1,0 +1,9 @@
+---
+title: "FUNCTIONS Naivy Rodal"
+output: html_notebook
+---
+
+>converter_nm_m<- function(number){ #The function converts nm to m
++ n<-number*(1*10^9)
++ n
++ }
